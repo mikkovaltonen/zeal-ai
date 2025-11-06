@@ -23,10 +23,10 @@
 
     /* Spacing */
     --spacing-xs: 8px;
-    --spacing-sm: 16px;
-    --spacing-md: 24px;
-    --spacing-lg: 48px;
-    --spacing-xl: 72px;
+    --spacing-sm: 12px;
+    --spacing-md: 20px;
+    --spacing-lg: 40px;
+    --spacing-xl: 60px;
 
     /* Transitions */
     --transition-standard: 0.4s ease;
@@ -125,25 +125,25 @@ a:hover {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-alt) 100%);
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     text-align: center;
     border-bottom: 2px solid var(--color-accent);
 }
 
 .hero-title {
-    font-size: 56px;
-    margin-bottom: var(--spacing-md);
+    font-size: 48px;
+    margin-bottom: var(--spacing-sm);
     color: var(--color-primary);
 }
 
 .hero-subtitle {
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-base);
     color: var(--color-text-secondary);
 }
 
 /* Vision & Mission Section */
 .vision-mission {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     background-color: var(--color-background);
 }
 
@@ -178,7 +178,7 @@ a:hover {
 
 /* Products Section */
 .products {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     background-color: var(--color-background-alt);
 }
 
@@ -284,7 +284,7 @@ a:hover {
 
 /* Case Studies Section */
 .case-studies {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     background-color: var(--color-background);
 }
 
@@ -436,7 +436,7 @@ a:hover {
 
 /* CTA Section */
 .cta {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     background-color: var(--color-primary);
     color: var(--color-background);
     text-align: center;
@@ -502,7 +502,7 @@ a:hover {
 .footer {
     background-color: var(--color-primary);
     color: var(--color-background);
-    padding: var(--spacing-xl) 0 var(--spacing-md);
+    padding: var(--spacing-lg) 0 var(--spacing-md);
 }
 
 .footer-content {
