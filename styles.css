@@ -524,7 +524,9 @@ a:hover {
     height: 50px;
     width: auto;
     margin-bottom: var(--spacing-sm);
-    filter: brightness(0) invert(1);
+    background-color: var(--color-background);
+    padding: var(--spacing-xs);
+    border-radius: 4px;
 }
 
 .footer-tagline {
