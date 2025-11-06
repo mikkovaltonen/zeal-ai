@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "devCommand": "npm run serve",
+  "cleanUrls": true,
+  "trailingSlash": false
+}
