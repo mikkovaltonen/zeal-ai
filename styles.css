@@ -225,21 +225,25 @@ a:hover {
     margin-bottom: var(--spacing-xs);
 }
 
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin-top: var(--spacing-xs);
+.customer-testimonial {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background-color: var(--color-background-alt);
+    border-left: 3px solid var(--color-accent);
+    font-style: italic;
 }
 
-.stars {
-    color: var(--color-accent);
-    font-size: var(--font-size-small);
-}
-
-.rating-text {
+.customer-testimonial p {
     color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.6;
+}
+
+.customer-testimonial cite {
+    color: var(--color-text-primary);
     font-size: var(--font-size-small);
+    font-weight: 600;
+    font-style: normal;
 }
 
 .product-description {
