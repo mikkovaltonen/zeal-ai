@@ -310,7 +310,7 @@ class ZealChatbot {
       const systemPrompt = this.getSystemPrompt();
 
       const requestBody = {
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-3-pro-preview',
         messages: [
           { role: 'system', content: systemPrompt },
           ...this.state.messages.slice(-10).map(msg => ({
