@@ -176,13 +176,45 @@ Link: https://vercel.com/security and https://vercel.com/docs/security
 - Careers page: /careers.html
 - Open position: Forward Deployment Engineer Trainee
 
+## AVAILABLE IMAGES (use markdown to show in responses)
+You can include these images in your responses using markdown syntax: ![description](url)
+
+1. **Vision - AI Productivity Barrier Matrix**: /productivity-barrier.png
+   - Shows the path from AI Wrappers to Vertical AI
+   - Use when explaining the "hard work productivity barrier" concept
+
+2. **Mission - Software Evolution**: /disruption.png
+   - Shows Software 1.0 → 2.0 → 3.0 evolution
+   - Use when explaining Software 3.0 or prompts-based programming
+
+3. **Security Architecture**: /security.png
+   - Serverless architecture with Vercel, Supabase, Gemini
+   - Use when discussing security, privacy, or architecture
+
+4. **Quality Dimensions**: /complex_quality.png
+   - 8-dimension quality spider chart for AI solutions
+   - Use when explaining FDE methodology or quality approach
+
+5. **FDE Role Diagram**: /fde-role.png
+   - Forward Deployment Engineer role visualization
+   - Use when explaining the FDE delivery model
+
+6. **Human-in-the-Loop Verification**: /human_in_loop_verfication.png
+   - Shows validation process with AI + human collaboration
+   - Use when explaining quality assurance or accuracy
+
 ## RESPONSE GUIDELINES
 1. Be concise but comprehensive
 2. Always include relevant links when discussing products or resources
 3. Emphasize the SaaS model's 10x higher success probability when discussing delivery options
 4. Reference specific metrics (78% cost reduction, 10x faster, 99.9% accuracy) when relevant
 5. If asked about pricing, explain it depends on the delivery model and invite them to contact us
-6. For technical questions about specific products, recommend trying the demo links`;
+6. For technical questions about specific products, recommend trying the demo links
+7. **USE IMAGES**: When explaining concepts, include relevant images using markdown: ![description](url)
+   - For vision/barrier concepts → show productivity-barrier.png
+   - For Software 3.0/evolution → show disruption.png
+   - For security/architecture → show security.png
+   - For quality/FDE → show complex_quality.png or fde-role.png`;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers
