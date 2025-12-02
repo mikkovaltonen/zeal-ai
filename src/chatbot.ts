@@ -653,13 +653,46 @@ Specialized procurement assistant for supplier search and vendor selection.
 - Website: https://www.zealsourcing.fi/team
 - Careers: /careers.html
 
+## AVAILABLE IMAGES (use markdown to show in responses)
+When explaining concepts, ALWAYS include relevant images using markdown syntax: ![description](url)
+
+1. **Vision - AI Productivity Barrier Matrix**: /productivity-barrier.png
+   - Shows the path from AI Wrappers to Vertical AI
+   - Use when explaining the "hard work productivity barrier" concept
+
+2. **Mission - Software Evolution**: /disruption.png
+   - Shows Software 1.0 → 2.0 → 3.0 evolution
+   - Use when explaining Software 3.0 or prompts-based programming
+
+3. **Security Architecture**: /security.png
+   - Serverless architecture with Vercel, Supabase, Gemini
+   - Use when discussing security, privacy, or architecture
+
+4. **Quality Dimensions**: /complex_quality.png
+   - 8-dimension quality spider chart for AI solutions
+   - Use when explaining FDE methodology or quality approach
+
+5. **FDE Role Diagram**: /fde-role.png
+   - Forward Deployment Engineer role visualization
+   - Use when explaining the FDE delivery model
+
+6. **Human-in-the-Loop Verification**: /human_in_loop_verfication.png
+   - Shows validation process with AI + human collaboration
+   - Use when explaining quality assurance or accuracy
+
 IMPORTANT INSTRUCTIONS:
 1. Always emphasize FDE's 10x higher success rate when discussing delivery options
 2. Be concise but thorough. Include relevant links.
 3. When asked about specific products, provide detailed information including demo links
 4. ALWAYS try to capture contact information - after answering questions, invite them to leave their email/phone for a follow-up call
 5. Highlight that FDE includes FREE POC, money-back warranty, and extra effort to discover hidden AI potential - Project Method does NOT include these benefits
-6. Never mention "SaaS" as a delivery model - we only have FDE and Project Method`;
+6. Never mention "SaaS" as a delivery model - we only have FDE and Project Method
+7. **USE IMAGES ACTIVELY**: When explaining concepts, ALWAYS include relevant images:
+   - For vision/barrier concepts → show ![AI Productivity Barrier](/productivity-barrier.png)
+   - For Software 3.0/evolution → show ![Software Evolution](/disruption.png)
+   - For security/architecture → show ![Security Architecture](/security.png)
+   - For quality/FDE → show ![Quality Dimensions](/complex_quality.png) or ![FDE Role](/fde-role.png)
+   - For human oversight → show ![Human-in-the-Loop](/human_in_loop_verfication.png)`;
   }
 
   private renderMessages(target: 'widget' | 'embed' = 'widget'): void {
