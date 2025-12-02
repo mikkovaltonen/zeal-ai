@@ -3,6 +3,8 @@
  * A floating chat widget that provides instant answers using Google Gemini via OpenRouter
  */
 
+import { saveChatMessage, saveFeedbackToFirestore } from './firebase';
+
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
@@ -302,6 +304,9 @@ class ZealChatbot {
     try {
       let assistantContent: string;
 
+      // Save user message to Firestore
+      saveChatMessage(this.state.sessionId, 'user', message);
+
       // Use backend API in production, direct OpenRouter in development
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         // Development: Call OpenRouter directly
@@ -340,6 +345,9 @@ class ZealChatbot {
 
         const data = await response.json();
         assistantContent = data.choices?.[0]?.message?.content || 'I apologize, I could not generate a response.';
+
+        // Save assistant message to Firestore (dev mode)
+        saveChatMessage(this.state.sessionId, 'assistant', assistantContent);
       } else {
         // Production: Use backend API (saves to Firestore)
         const response = await fetch('/api/chat', {
@@ -873,25 +881,25 @@ IMPORTANT INSTRUCTIONS:
     // Log locally
     this.logChat('feedback', feedbackData);
 
-    // Skip API call in local development (Vercel serverless functions not available)
+    // Save to Firestore (works in both dev and production)
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.log('📝 Feedback stored locally (dev mode):', feedbackData);
-      return;
-    }
+      // Development: Use Firebase client SDK
+      await saveFeedbackToFirestore(feedbackData);
+    } else {
+      // Production: Use backend API
+      try {
+        const response = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedbackData)
+        });
 
-    // Save to Firestore via API
-    try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(feedbackData)
-      });
-
-      if (response.ok) {
-        console.log('✅ Feedback saved to Firestore');
+        if (response.ok) {
+          console.log('✅ Feedback saved to Firestore');
+        }
+      } catch (error) {
+        console.log('Could not save feedback to server, stored locally');
       }
-    } catch (error) {
-      console.log('Could not save feedback to server, stored locally');
     }
   }
 
