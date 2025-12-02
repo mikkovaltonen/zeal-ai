@@ -113,11 +113,21 @@ class ZealChatbot {
               <span class="chatbot-status">Online</span>
             </div>
           </div>
-          <button class="chatbot-minimize" aria-label="Minimize chat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
+          <div class="chatbot-header-actions">
+            <button class="chatbot-expand" aria-label="Expand chat">
+              <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              </svg>
+              <svg class="collapse-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 14h6v6M14 4h6v6M10 14l-7 7M21 3l-7 7"/>
+              </svg>
+            </button>
+            <button class="chatbot-minimize" aria-label="Minimize chat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="chatbot-messages" id="chatbot-messages">
           <div class="chatbot-welcome">
@@ -204,6 +214,10 @@ class ZealChatbot {
     const minimizeBtn = this.container.querySelector('.chatbot-minimize');
     minimizeBtn?.addEventListener('click', () => this.toggle());
 
+    // Expand button
+    const expandBtn = this.container.querySelector('.chatbot-expand');
+    expandBtn?.addEventListener('click', () => this.toggleExpand());
+
     // Form submission
     const form = document.getElementById('chatbot-form');
     form?.addEventListener('submit', (e) => this.handleSubmit(e, 'widget'));
@@ -237,6 +251,22 @@ class ZealChatbot {
       window?.classList.add('hidden');
       chatIcon?.classList.remove('hidden');
       closeIcon?.classList.add('hidden');
+    }
+  }
+
+  private toggleExpand(): void {
+    const chatWindow = this.container?.querySelector('.chatbot-window');
+    const expandIcon = this.container?.querySelector('.expand-icon');
+    const collapseIcon = this.container?.querySelector('.collapse-icon');
+
+    if (chatWindow?.classList.contains('expanded')) {
+      chatWindow.classList.remove('expanded');
+      expandIcon?.classList.remove('hidden');
+      collapseIcon?.classList.add('hidden');
+    } else {
+      chatWindow?.classList.add('expanded');
+      expandIcon?.classList.add('hidden');
+      collapseIcon?.classList.remove('hidden');
     }
   }
 

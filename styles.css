@@ -1362,6 +1362,28 @@ a:hover {
     display: none;
 }
 
+/* Expanded chatbot window */
+.chatbot-window.expanded {
+    width: 600px;
+    height: 80vh;
+    max-width: calc(100vw - 48px);
+    max-height: calc(100vh - 120px);
+}
+
+@media (min-width: 768px) {
+    .chatbot-window.expanded {
+        width: 700px;
+        height: 85vh;
+    }
+}
+
+@media (min-width: 1024px) {
+    .chatbot-window.expanded {
+        width: 800px;
+        height: 90vh;
+    }
+}
+
 .chatbot-header {
     background: var(--color-primary);
     color: var(--color-background);
@@ -1405,17 +1427,37 @@ a:hover {
     color: #4ade80;
 }
 
+.chatbot-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chatbot-expand,
 .chatbot-minimize {
     background: none;
     border: none;
     cursor: pointer;
     padding: 4px;
+    border-radius: 4px;
+    transition: background var(--transition-standard);
 }
 
+.chatbot-expand:hover,
+.chatbot-minimize:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-expand svg,
 .chatbot-minimize svg {
     width: 20px;
     height: 20px;
     stroke: var(--color-background);
+}
+
+.chatbot-expand .hidden,
+.chatbot-minimize .hidden {
+    display: none;
 }
 
 .chatbot-messages {
