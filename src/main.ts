@@ -23,7 +23,41 @@ class PortfolioApp {
         this.setupSmoothScrolling();
         this.setupScrollAnimations();
         this.setupProductCards();
+        this.setupFAQAccordion();
+        this.debugImages();
         this.logWelcomeMessage();
+    }
+
+    /**
+     * Debug image loading issues
+     */
+    private debugImages(): void {
+        const images = document.querySelectorAll('img');
+        console.log(`%c[DEBUG] Found ${images.length} images on page`, 'color: blue; font-weight: bold;');
+
+        images.forEach((img, index) => {
+            const src = img.getAttribute('src');
+            console.log(`[DEBUG] Image ${index + 1}: src="${src}"`);
+
+            img.addEventListener('load', () => {
+                console.log(`%c[OK] Image loaded: ${src}`, 'color: green;');
+            });
+
+            img.addEventListener('error', () => {
+                console.error(`%c[ERROR] Failed to load image: ${src}`, 'color: red; font-weight: bold;');
+                console.error(`  - Full URL attempted: ${img.src}`);
+                console.error(`  - Check if file exists in public/ folder`);
+            });
+
+            // Check if already loaded or errored
+            if (img.complete) {
+                if (img.naturalWidth === 0) {
+                    console.error(`%c[ERROR] Image already failed: ${src}`, 'color: red;');
+                } else {
+                    console.log(`%c[OK] Image already loaded: ${src}`, 'color: green;');
+                }
+            }
+        });
     }
 
     /**
@@ -131,6 +165,37 @@ class PortfolioApp {
     private trackProductView(productName: string): void {
         console.log(`Product viewed: ${productName}`);
         // In production, this would send to analytics service
+    }
+
+    /**
+     * Set up FAQ accordion functionality
+     */
+    private setupFAQAccordion(): void {
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(button => {
+            button.addEventListener('click', () => {
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                const answer = button.nextElementSibling as HTMLElement;
+
+                // Close all other answers
+                faqQuestions.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.setAttribute('aria-expanded', 'false');
+                        const otherAnswer = otherButton.nextElementSibling as HTMLElement;
+                        if (otherAnswer) {
+                            otherAnswer.classList.remove('open');
+                        }
+                    }
+                });
+
+                // Toggle current answer
+                button.setAttribute('aria-expanded', (!isExpanded).toString());
+                if (answer) {
+                    answer.classList.toggle('open', !isExpanded);
+                }
+            });
+        });
     }
 
     /**
