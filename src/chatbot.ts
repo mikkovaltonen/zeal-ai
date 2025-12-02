@@ -808,6 +808,11 @@ IMPORTANT INSTRUCTIONS:
     // Convert markdown links to HTML: [text](url)
     content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
+    // Convert markdown headers (### h3, ## h2, # h1)
+    content = content.replace(/^### (.+)$/gm, '<h4 class="chatbot-heading">$1</h4>');
+    content = content.replace(/^## (.+)$/gm, '<h3 class="chatbot-heading">$1</h3>');
+    content = content.replace(/^# (.+)$/gm, '<h2 class="chatbot-heading">$1</h2>');
+
     // Convert **bold** to <strong>
     content = content.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
