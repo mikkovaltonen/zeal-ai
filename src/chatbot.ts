@@ -300,43 +300,70 @@ class ZealChatbot {
     this.showTypingIndicator(target);
 
     try {
-      // Call OpenRouter directly from frontend
-      const openRouterApiKey = import.meta.env.VITE_OPEN_ROUTER_API_KEY || '';
+      let assistantContent: string;
 
-      const systemPrompt = this.getSystemPrompt();
+      // Use backend API in production, direct OpenRouter in development
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Development: Call OpenRouter directly
+        const openRouterApiKey = import.meta.env.VITE_OPEN_ROUTER_API_KEY || '';
+        const systemPrompt = this.getSystemPrompt();
 
-      const requestBody = {
-        model: 'google/gemini-3-pro-preview',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...this.state.messages.slice(-10).map(msg => ({
-            role: msg.role,
-            content: msg.content
-          }))
-        ],
-        max_tokens: 2048,
-        temperature: 0.7
-      };
+        const requestBody = {
+          model: 'google/gemini-2.5-flash-preview-05-20',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            ...this.state.messages.slice(-10).map(msg => ({
+              role: msg.role,
+              content: msg.content
+            }))
+          ],
+          max_tokens: 2048,
+          temperature: 0.7
+        };
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openRouterApiKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': window.location.origin || 'https://zeal-ai-limited.vercel.app',
-          'X-Title': 'Zeal AI FAQ Chatbot'
-        },
-        body: JSON.stringify(requestBody)
-      });
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openRouterApiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': window.location.origin || 'https://zeal-ai-limited.vercel.app',
+            'X-Title': 'Zeal AI FAQ Chatbot'
+          },
+          body: JSON.stringify(requestBody)
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('OpenRouter API error:', response.status, errorData);
-        throw new Error(errorData.error?.message || 'Failed to get response');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('OpenRouter API error:', response.status, errorData);
+          throw new Error(errorData.error?.message || 'Failed to get response');
+        }
+
+        const data = await response.json();
+        assistantContent = data.choices?.[0]?.message?.content || 'I apologize, I could not generate a response.';
+      } else {
+        // Production: Use backend API (saves to Firestore)
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message,
+            sessionId: this.state.sessionId,
+            history: this.state.messages.slice(-10).map(msg => ({
+              role: msg.role,
+              content: msg.content
+            }))
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Chat API error:', response.status, errorData);
+          throw new Error(errorData.error || 'Failed to get response');
+        }
+
+        const data = await response.json();
+        assistantContent = data.message || 'I apologize, I could not generate a response.';
       }
-
-      const data = await response.json();
-      const assistantContent = data.choices?.[0]?.message?.content || 'I apologize, I could not generate a response.';
 
       // Add assistant message
       const assistantMessage: ChatMessage = {

@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Save feedback to Firestore
-    const feedbackRef = db.collection('chat_feedback').doc();
+    const feedbackRef = db.collection('home_page_chat_feedback').doc();
     await feedbackRef.set({
       sessionId,
       messageId,
