@@ -1548,6 +1548,26 @@ a:hover {
     transform: scale(1.02);
 }
 
+/* Chatbot headings */
+.chatbot-message.assistant .chatbot-heading {
+    margin: var(--spacing-sm) 0 var(--spacing-xs) 0;
+    color: var(--color-primary);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.chatbot-message.assistant h2.chatbot-heading {
+    font-size: 1.1rem;
+}
+
+.chatbot-message.assistant h3.chatbot-heading {
+    font-size: 1rem;
+}
+
+.chatbot-message.assistant h4.chatbot-heading {
+    font-size: 0.95rem;
+}
+
 /* Message feedback buttons */
 .message-feedback {
     display: flex;
