@@ -3,7 +3,7 @@
  * A floating chat widget that provides instant answers using Google Gemini via OpenRouter
  */
 
-import { saveChatMessage, saveFeedbackToFirestore } from './firebase';
+import { saveChatMessage, saveFeedbackToFirestore, loadChatHistory } from './firebase';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -58,22 +58,15 @@ class ZealChatbot {
   }
 
   private async loadHistory(): Promise<void> {
-    // Skip history loading in local dev (Vercel serverless functions not available)
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return;
-    }
     try {
-      const response = await fetch(`/api/history?sessionId=${this.state.sessionId}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.messages && data.messages.length > 0) {
-          this.state.messages = data.messages.map((msg: any) => ({
-            role: msg.role,
-            content: msg.content,
-            timestamp: msg.timestamp,
-          }));
-          this.renderMessages();
-        }
+      const messages = await loadChatHistory(this.state.sessionId);
+      if (messages && messages.length > 0) {
+        this.state.messages = messages.map((msg: any) => ({
+          role: msg.role,
+          content: msg.content,
+          timestamp: msg.timestamp,
+        }));
+        this.renderMessages();
       }
     } catch (error) {
       console.log('Could not load chat history');
