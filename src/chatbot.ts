@@ -302,76 +302,48 @@ class ZealChatbot {
     this.showTypingIndicator(target);
 
     try {
-      let assistantContent: string;
-
       // Save user message to Firestore
       saveChatMessage(this.state.sessionId, 'user', message);
 
-      // Use backend API in production, direct OpenRouter in development
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        // Development: Call OpenRouter directly
-        const openRouterApiKey = import.meta.env.VITE_OPEN_ROUTER_API_KEY || '';
-        const systemPrompt = this.getSystemPrompt();
+      // Call OpenRouter directly (same for dev and production)
+      const openRouterApiKey = import.meta.env.VITE_OPEN_ROUTER_API_KEY || '';
+      const systemPrompt = this.getSystemPrompt();
 
-        const requestBody = {
-          model: 'google/gemini-2.5-flash-preview-05-20',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            ...this.state.messages.slice(-10).map(msg => ({
-              role: msg.role,
-              content: msg.content
-            }))
-          ],
-          max_tokens: 2048,
-          temperature: 0.7
-        };
+      const requestBody = {
+        model: 'google/gemini-2.5-flash-preview-05-20',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...this.state.messages.slice(-10).map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }))
+        ],
+        max_tokens: 2048,
+        temperature: 0.7
+      };
 
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${openRouterApiKey}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': window.location.origin || 'https://zeal-ai-limited.vercel.app',
-            'X-Title': 'Zeal AI FAQ Chatbot'
-          },
-          body: JSON.stringify(requestBody)
-        });
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openRouterApiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin || 'https://zeal-ai-limited.vercel.app',
+          'X-Title': 'Zeal AI FAQ Chatbot'
+        },
+        body: JSON.stringify(requestBody)
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('OpenRouter API error:', response.status, errorData);
-          throw new Error(errorData.error?.message || 'Failed to get response');
-        }
-
-        const data = await response.json();
-        assistantContent = data.choices?.[0]?.message?.content || 'I apologize, I could not generate a response.';
-
-        // Save assistant message to Firestore (dev mode)
-        saveChatMessage(this.state.sessionId, 'assistant', assistantContent);
-      } else {
-        // Production: Use backend API (saves to Firestore)
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message,
-            sessionId: this.state.sessionId,
-            history: this.state.messages.slice(-10).map(msg => ({
-              role: msg.role,
-              content: msg.content
-            }))
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('Chat API error:', response.status, errorData);
-          throw new Error(errorData.error || 'Failed to get response');
-        }
-
-        const data = await response.json();
-        assistantContent = data.message || 'I apologize, I could not generate a response.';
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('OpenRouter API error:', response.status, errorData);
+        throw new Error(errorData.error?.message || 'Failed to get response');
       }
+
+      const data = await response.json();
+      const assistantContent = data.choices?.[0]?.message?.content || 'I apologize, I could not generate a response.';
+
+      // Save assistant message to Firestore
+      saveChatMessage(this.state.sessionId, 'assistant', assistantContent);
 
       // Add assistant message
       const assistantMessage: ChatMessage = {
@@ -881,26 +853,8 @@ IMPORTANT INSTRUCTIONS:
     // Log locally
     this.logChat('feedback', feedbackData);
 
-    // Save to Firestore (works in both dev and production)
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      // Development: Use Firebase client SDK
-      await saveFeedbackToFirestore(feedbackData);
-    } else {
-      // Production: Use backend API
-      try {
-        const response = await fetch('/api/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(feedbackData)
-        });
-
-        if (response.ok) {
-          console.log('✅ Feedback saved to Firestore');
-        }
-      } catch (error) {
-        console.log('Could not save feedback to server, stored locally');
-      }
-    }
+    // Save to Firestore using Firebase client SDK (same for dev and production)
+    await saveFeedbackToFirestore(feedbackData);
   }
 
   private logChat(eventType: string, data: any): void {
