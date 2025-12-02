@@ -763,16 +763,102 @@ IMPORTANT INSTRUCTIONS:
       // Toggle feedback if clicking same button
       msg.feedback = msg.feedback === feedback ? null : feedback;
 
-      // Log the feedback
-      this.logChat('feedback', {
-        messageId: msgId,
-        feedback: msg.feedback,
-        messageContent: msg.content.substring(0, 100) + '...',
-        timestamp: new Date().toISOString()
-      });
+      // If negative feedback, show dialog for comment
+      if (feedback === 'down' && msg.feedback === 'down') {
+        this.showFeedbackDialog(msgId, msg.content);
+      } else {
+        // Log positive feedback immediately
+        this.saveFeedback(msgId, msg.feedback, msg.content, '');
+      }
 
       // Re-render to update button states
       this.renderMessages();
+    }
+  }
+
+  private showFeedbackDialog(msgId: string, messageContent: string): void {
+    // Remove existing dialog if any
+    const existingDialog = document.getElementById('feedback-dialog');
+    if (existingDialog) existingDialog.remove();
+
+    // Create dialog
+    const dialog = document.createElement('div');
+    dialog.id = 'feedback-dialog';
+    dialog.className = 'feedback-dialog-overlay';
+    dialog.innerHTML = `
+      <div class="feedback-dialog">
+        <div class="feedback-dialog-header">
+          <h4>Help us improve</h4>
+          <button class="feedback-dialog-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <p>What was wrong with this response?</p>
+        <textarea class="feedback-textarea" placeholder="Please describe the issue..." rows="4"></textarea>
+        <div class="feedback-dialog-actions">
+          <button class="feedback-cancel-btn">Cancel</button>
+          <button class="feedback-submit-btn">Submit Feedback</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    // Focus textarea
+    const textarea = dialog.querySelector('.feedback-textarea') as HTMLTextAreaElement;
+    textarea?.focus();
+
+    // Event listeners
+    const closeBtn = dialog.querySelector('.feedback-dialog-close');
+    const cancelBtn = dialog.querySelector('.feedback-cancel-btn');
+    const submitBtn = dialog.querySelector('.feedback-submit-btn');
+
+    const closeDialog = () => {
+      dialog.remove();
+    };
+
+    closeBtn?.addEventListener('click', closeDialog);
+    cancelBtn?.addEventListener('click', closeDialog);
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeDialog();
+    });
+
+    submitBtn?.addEventListener('click', () => {
+      const comment = textarea?.value.trim() || '';
+      this.saveFeedback(msgId, 'down', messageContent, comment);
+      closeDialog();
+    });
+  }
+
+  private async saveFeedback(msgId: string, feedback: 'up' | 'down' | null, messageContent: string, comment: string): Promise<void> {
+    const feedbackData = {
+      sessionId: this.state.sessionId,
+      messageId: msgId,
+      feedback,
+      comment,
+      messageContent: messageContent.substring(0, 500),
+      timestamp: new Date().toISOString(),
+      url: window.location.href
+    };
+
+    // Log locally
+    this.logChat('feedback', feedbackData);
+
+    // Save to Firestore via API
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedbackData)
+      });
+
+      if (response.ok) {
+        console.log('✅ Feedback saved to Firestore');
+      }
+    } catch (error) {
+      console.log('Could not save feedback to server, stored locally');
     }
   }
 

@@ -1568,6 +1568,111 @@ a:hover {
     font-size: 0.95rem;
 }
 
+/* Feedback dialog */
+.feedback-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+}
+
+.feedback-dialog {
+    background: var(--color-background);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.feedback-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.feedback-dialog-header h4 {
+    margin: 0;
+    color: var(--color-primary);
+}
+
+.feedback-dialog-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--color-text-secondary);
+}
+
+.feedback-dialog-close:hover {
+    color: var(--color-text-primary);
+}
+
+.feedback-dialog p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.feedback-textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    resize: vertical;
+    min-height: 100px;
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.feedback-dialog-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-end;
+    margin-top: var(--spacing-md);
+}
+
+.feedback-cancel-btn,
+.feedback-submit-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 6px;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-standard);
+}
+
+.feedback-cancel-btn {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+.feedback-cancel-btn:hover {
+    background: var(--color-background-alt);
+}
+
+.feedback-submit-btn {
+    background: var(--color-accent);
+    border: none;
+    color: var(--color-background);
+}
+
+.feedback-submit-btn:hover {
+    background: var(--color-hover);
+}
+
 /* Message feedback buttons */
 .message-feedback {
     display: flex;
