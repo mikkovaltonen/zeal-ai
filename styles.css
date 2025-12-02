@@ -561,6 +561,103 @@ a:hover {
     color: var(--color-text-secondary);
 }
 
+/* Vision & Mission cards with images */
+.vm-card-vision,
+.vm-card-mission {
+    grid-column: span 2;
+}
+
+.vision-image,
+.mission-image {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    margin-top: var(--spacing-md);
+}
+
+/* Careers page styles */
+.careers-intro {
+    padding: var(--spacing-lg) 0;
+    background-color: var(--color-background);
+}
+
+.careers-intro p {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    font-size: var(--font-size-large);
+}
+
+.job-listing {
+    padding: var(--spacing-lg) 0;
+    background-color: var(--color-background-alt);
+}
+
+.job-card {
+    background: var(--color-background);
+    padding: var(--spacing-lg);
+    border-left: 4px solid var(--color-accent);
+    max-width: 900px;
+    margin: var(--spacing-lg) auto 0;
+}
+
+.job-card h2 {
+    margin-bottom: var(--spacing-xs);
+}
+
+.job-type {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-md);
+}
+
+.job-card h3 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-primary);
+}
+
+.job-card p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+
+.job-card ul {
+    list-style: none;
+    margin: var(--spacing-sm) 0;
+}
+
+.job-card ul li {
+    padding: var(--spacing-xs) 0;
+    padding-left: var(--spacing-md);
+    position: relative;
+    color: var(--color-text-secondary);
+}
+
+.job-card ul li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+.job-card .btn {
+    margin-top: var(--spacing-lg);
+}
+
+.role-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: var(--spacing-lg) 0;
+    border-radius: 4px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     :root {
@@ -593,6 +690,11 @@ a:hover {
 
     .vm-grid {
         grid-template-columns: 1fr;
+    }
+
+    .vm-card-vision,
+    .vm-card-mission {
+        grid-column: span 1;
     }
 
     .cta-buttons {
