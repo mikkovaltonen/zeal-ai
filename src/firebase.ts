@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, setDoc, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, setDoc, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -98,6 +98,30 @@ export async function saveFeedbackToFirestore(feedbackData: {
     console.log('✅ Feedback saved to Firestore');
   } catch (error) {
     console.error('Error saving feedback:', error);
+  }
+}
+
+// Load chat history from Firestore
+export async function loadChatHistory(sessionId: string): Promise<any[]> {
+  const authenticated = await ensureAuth();
+  if (!authenticated) return [];
+
+  try {
+    const sessionRef = doc(db, 'home_page_chat_log', sessionId);
+    const messagesRef = collection(sessionRef, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'asc'));
+    const snapshot = await getDocs(q);
+
+    const messages: any[] = [];
+    snapshot.forEach((doc) => {
+      messages.push(doc.data());
+    });
+
+    console.log(`📜 Loaded ${messages.length} messages from history`);
+    return messages;
+  } catch (error) {
+    console.error('Error loading chat history:', error);
+    return [];
   }
 }
 
