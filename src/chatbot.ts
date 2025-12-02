@@ -846,6 +846,12 @@ IMPORTANT INSTRUCTIONS:
     // Log locally
     this.logChat('feedback', feedbackData);
 
+    // Skip API call in local development (Vercel serverless functions not available)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('📝 Feedback stored locally (dev mode):', feedbackData);
+      return;
+    }
+
     // Save to Firestore via API
     try {
       const response = await fetch('/api/feedback', {
