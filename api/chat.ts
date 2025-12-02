@@ -258,7 +258,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const assistantMessage = completion.choices[0]?.message?.content || 'I apologize, I could not generate a response. Please try again.';
 
     // Store in Firestore
-    const sessionRef = db.collection('chat_sessions').doc(sessionId);
+    const sessionRef = db.collection('home_page_chat_log').doc(sessionId);
     const timestamp = new Date().toISOString();
 
     await sessionRef.set({
