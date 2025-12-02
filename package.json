@@ -4,7 +4,7 @@
   "description": "Zeal AI Limited - Professional Product Portfolio",
   "type": "module",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "vite",
@@ -21,6 +21,9 @@
     "vite": "^5.4.0"
   },
   "dependencies": {
-    "firebase": "^10.7.0"
+    "firebase": "^10.7.0",
+    "firebase-admin": "^12.0.0",
+    "openai": "^4.0.0",
+    "@vercel/node": "^3.0.0"
   }
 }
