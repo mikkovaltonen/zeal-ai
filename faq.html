@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Careers - Zeal AI Limited</title>
+    <title>FAQ - Zeal AI Limited</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="logo.png">
 </head>
@@ -17,8 +17,8 @@
                     <a href="index.html#about">About</a>
                     <a href="index.html#products">Products</a>
                     <a href="index.html#case-studies">Case Studies</a>
-                    <a href="faq.html">FAQ</a>
-                    <a href="careers.html" class="active">Careers</a>
+                    <a href="faq.html" class="active">FAQ</a>
+                    <a href="careers.html">Careers</a>
                     <a href="https://www.zealsourcing.fi/team" target="_blank" rel="noopener">Contact</a>
                 </nav>
             </div>
@@ -26,53 +26,35 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero hero-small">
         <div class="container">
-            <h1 class="hero-title">Join Zeal AI</h1>
-            <p class="hero-subtitle">Build the future of Software 3.0</p>
+            <h1 class="hero-title">Frequently Asked Questions</h1>
+            <p class="hero-subtitle">Everything you need to know about Zeal AI's products and services</p>
         </div>
     </section>
 
-    <!-- Company Description -->
-    <section class="careers-intro">
+    <!-- FAQ Content -->
+    <section class="faq-section">
         <div class="container">
-            <p>Zeal AI Limited envisions a future where organizations develop business logic in human language. Our mission is to design high work productivity user experiences via deep AI integration with data and complex humanity. With a 100% satisfaction guarantee and a fully serverless, SQL-less architecture, we provide big account service to small teams. Our products are highly regarded by our clients, as showcased by successful platforms like Real Estate Manager Invoicer, Massify and Demand Manager.</p>
+            <!-- FAQ Accordion - Dynamically loaded from FAQ.md -->
+            <div class="faq-accordion" id="faq-accordion-content">
+                <div class="faq-loading">
+                    <p>Loading FAQ content...</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
-    <!-- Open Positions -->
-    <section class="job-listing">
+    <!-- CTA Section -->
+    <section class="cta">
         <div class="container">
-            <h2 class="section-title">Open Positions</h2>
-
-            <article class="job-card">
-                <h2>Forward Deployment Engineer Trainee</h2>
-                <p class="job-type">Full-time</p>
-
-                <img src="fde-role.png" alt="Forward Deployment Engineer role diagram" class="role-image">
-
-                <h3>Role Description</h3>
-                <p>Your role will be developing Vertical AI solutions as part of the everyday work of a non-technical end-user team.</p>
-
-                <h3>Qualifications</h3>
-                <p>We expect applicants to demonstrate exceptional ability, for example through:</p>
-                <ul>
-                    <li>An excellent matriculation examination certificate</li>
-                    <li>A distinguished special project or master's thesis at university</li>
-                    <li>A win in a science, mathematics, or programming competition</li>
-                    <li>An ambitious personal project (such as an app, game, research project, chatbot, AI agent, AI Assistant or open-source contribution)</li>
-                </ul>
-
-                <h3>What We Offer</h3>
-                <p>We invest heavily in trainee training, so we expect, in return, a willingness to work long hours when projects require it. Compensation consists of:</p>
-                <ul>
-                    <li>Base salary (covering living expenses)</li>
-                    <li>Performance-based bonus</li>
-                    <li>Significant equity share</li>
-                </ul>
-
-                <a href="mailto:mikko@zealsourcing.fi" class="btn btn-primary">Apply Now</a>
-            </article>
+            <h2>Ready to Get Started?</h2>
+            <p>Experience our solutions with a free proof of concept using your own data</p>
+            <div class="cta-buttons">
+                <a href="https://www.zealsourcing.fi/team" target="_blank" rel="noopener" class="btn btn-primary">Contact Our Team</a>
+                <a href="index.html#products" class="btn btn-secondary">Explore Products</a>
+            </div>
         </div>
     </section>
 
@@ -81,7 +63,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <img src="logo.png" alt="Zeal AI Limited" class="footer-logo">
+                    <a href="index.html"><img src="logo.png" alt="Zeal AI Limited" class="footer-logo"></a>
                     <p class="footer-tagline">We build companies that think</p>
                 </div>
                 <div class="footer-section">
@@ -113,6 +95,8 @@
         </div>
     </footer>
 
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/faq-loader.ts"></script>
     <script type="module" src="/src/chatbot.ts"></script>
 </body>
 </html>
