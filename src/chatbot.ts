@@ -739,7 +739,10 @@ IMPORTANT INSTRUCTIONS:
   }
 
   private formatMessage(content: string): string {
-    // Convert markdown links to HTML
+    // Convert markdown images to HTML: ![alt](url)
+    content = content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="chatbot-image" loading="lazy">');
+
+    // Convert markdown links to HTML: [text](url)
     content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
     // Convert **bold** to <strong>

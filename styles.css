@@ -1493,6 +1493,19 @@ a:hover {
     padding-left: var(--spacing-md);
 }
 
+.chatbot-message.assistant .chatbot-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: var(--spacing-sm) 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.chatbot-message.assistant .chatbot-image:hover {
+    transform: scale(1.02);
+}
+
 /* Message feedback buttons */
 .message-feedback {
     display: flex;
