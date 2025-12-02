@@ -1,21 +1,23 @@
 {
-  "name": "home-page",
+  "name": "zeal-ai-limited",
   "version": "1.0.0",
   "description": "Zeal AI Limited - Professional Product Portfolio",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "serve": "npx http-server -p 8080 -o"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "build:ts": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Zeal AI Limited",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "firebase": "^10.7.0"
   }
 }
