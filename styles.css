@@ -209,6 +209,7 @@ a:hover {
 .products {
     padding: var(--spacing-lg) 0;
     background-color: var(--color-background-alt);
+    overflow: hidden;
 }
 
 .section-title {
@@ -223,6 +224,92 @@ a:hover {
     margin-bottom: var(--spacing-lg);
 }
 
+/* Products Carousel */
+.products-carousel {
+    overflow: hidden;
+    width: 100%;
+    margin-top: var(--spacing-lg);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.products-track {
+    display: flex;
+    gap: var(--spacing-lg);
+    animation: products-scroll 30s linear infinite;
+    width: max-content;
+}
+
+.products-carousel:hover .products-track {
+    animation-play-state: paused;
+}
+
+@keyframes products-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.product-banner-card {
+    flex-shrink: 0;
+    width: 280px;
+    background-color: var(--color-background);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: transform var(--transition-standard), box-shadow var(--transition-standard), border-color var(--transition-standard);
+}
+
+.product-banner-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--color-accent);
+}
+
+.product-logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.product-logo-svg {
+    width: 100%;
+    max-width: 220px;
+    height: 50px;
+}
+
+.product-logo-svg .logo-zeal {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    font-weight: 700;
+    fill: #080808;
+    letter-spacing: -2px;
+}
+
+.product-logo-svg .logo-product {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    fill: var(--color-primary);
+}
+
+.product-banner-desc {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-small);
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Legacy products grid styles (kept for compatibility) */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
