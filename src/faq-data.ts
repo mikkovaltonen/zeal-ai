@@ -39,7 +39,7 @@ export const faqData: FAQCategory[] = [
 <p><strong>Our Secure Serverless Architecture:</strong></p>
 <ul>
 <li><strong>Vercel</strong> - World-leading dev/ops platform with EU residency and EU compliance</li>
-<li><strong>Supabase</strong> - No-SQL database with safe API separation and elegant API integration</li>
+<li><strong>Supabase</strong> - Postgress Database Trusted by the world's most innovative companies. Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings.</li>
 <li><strong>Google Gemini</strong> - AI processing via encrypted secure traffic</li>
 <li>All customer documents and ERP systems connect through encrypted APIs</li>
 </ul>
