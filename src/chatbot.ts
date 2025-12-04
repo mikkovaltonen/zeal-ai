@@ -433,7 +433,7 @@ Zeal AI Limited is a Finnish AI company that builds "Companies That Think" - aut
 **Our Secure Serverless Architecture:**
 We use a modern, secure serverless architecture with three key components:
 1. **Vercel** - World-leading dev/ops platform with EU Residency and EU Compliance
-2. **Supabase** - No-SQL database with safe API separation and elegant API integration
+2. **Supabase** - Postgress Database Trusted by the world's most innovative companies. Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings.
 3. **Google Gemini** - AI processing via encrypted secure traffic
 
 All customer documents and ERP systems connect through encrypted APIs. This architecture ensures:
