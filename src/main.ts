@@ -70,8 +70,6 @@ class CardDeckAnimation {
         );
 
         observer.observe(this.deck!);
-
-        console.log('%c[CardDeck] Initialized with', 'color: purple;', this.cards.length, 'cards');
     }
 
     /**
@@ -81,7 +79,6 @@ class CardDeckAnimation {
         if (!this.deck || this.isAnimating) return;
 
         this.isAnimating = true;
-        console.log('%c[CardDeck] Starting shuffle animation...', 'color: purple;');
 
         // 2. Stack cards into a deck
         this.deck.dataset.state = 'stacking';
@@ -119,9 +116,6 @@ class CardDeckAnimation {
         this.cards.forEach((card, index) => {
             card.style.setProperty('--card-index', index.toString());
         });
-
-        console.log('%c[CardDeck] Shuffle complete! New order:', 'color: green;',
-            newOrder.map(c => c.dataset.card).join(' -> '));
 
         this.isAnimating = false;
     }
@@ -182,8 +176,6 @@ class PortfolioApp {
         this.setupProductCards();
         this.setupFAQAccordion();
         this.setupCardDeckAnimation();
-        this.debugImages();
-        this.logWelcomeMessage();
     }
 
     /**
@@ -191,38 +183,6 @@ class PortfolioApp {
      */
     private setupCardDeckAnimation(): void {
         this.cardDeck = new CardDeckAnimation();
-    }
-
-    /**
-     * Debug image loading issues
-     */
-    private debugImages(): void {
-        const images = document.querySelectorAll('img');
-        console.log(`%c[DEBUG] Found ${images.length} images on page`, 'color: blue; font-weight: bold;');
-
-        images.forEach((img, index) => {
-            const src = img.getAttribute('src');
-            console.log(`[DEBUG] Image ${index + 1}: src="${src}"`);
-
-            img.addEventListener('load', () => {
-                console.log(`%c[OK] Image loaded: ${src}`, 'color: green;');
-            });
-
-            img.addEventListener('error', () => {
-                console.error(`%c[ERROR] Failed to load image: ${src}`, 'color: red; font-weight: bold;');
-                console.error(`  - Full URL attempted: ${img.src}`);
-                console.error(`  - Check if file exists in public/ folder`);
-            });
-
-            // Check if already loaded or errored
-            if (img.complete) {
-                if (img.naturalWidth === 0) {
-                    console.error(`%c[ERROR] Image already failed: ${src}`, 'color: red;');
-                } else {
-                    console.log(`%c[OK] Image already loaded: ${src}`, 'color: green;');
-                }
-            }
-        });
     }
 
     /**
@@ -292,27 +252,16 @@ class PortfolioApp {
      * Set up product card interactions
      */
     private setupProductCards(): void {
-        const productCards = document.querySelectorAll('.product-card');
+        // Support both old .product-card and new .product-banner-card
+        const productCards = document.querySelectorAll('.product-card, .product-banner-card');
 
         productCards.forEach(card => {
-            const productName = card.querySelector('h3')?.textContent || 'Unknown';
-            const ratingText = card.querySelector('.rating-text')?.textContent;
-
-            let rating: number | undefined;
-            let reviews: number | undefined;
-
-            if (ratingText) {
-                const match = ratingText.match(/(\d+\.?\d*)\/5 \((\d+) reviews\)/);
-                if (match) {
-                    rating = parseFloat(match[1]);
-                    reviews = parseInt(match[2], 10);
-                }
-            }
+            const productName = card.querySelector('h3')?.textContent
+                || card.querySelector('.logo-product')?.textContent
+                || 'Unknown';
 
             this.products.push({
-                name: productName,
-                rating,
-                reviews
+                name: productName
             });
 
             // Add hover analytics
@@ -320,15 +269,12 @@ class PortfolioApp {
                 this.trackProductView(productName);
             });
         });
-
-        console.log('Products loaded:', this.products);
     }
 
     /**
      * Track product view (placeholder for analytics)
      */
-    private trackProductView(productName: string): void {
-        console.log(`Product viewed: ${productName}`);
+    private trackProductView(_productName: string): void {
         // In production, this would send to analytics service
     }
 
@@ -361,15 +307,6 @@ class PortfolioApp {
                 }
             });
         });
-    }
-
-    /**
-     * Log welcome message to console
-     */
-    private logWelcomeMessage(): void {
-        console.log('%c🧠 Zeal AI Limited', 'font-size: 20px; font-weight: bold; color: #FF0000;');
-        console.log('%cWe build companies that think', 'font-size: 14px; font-style: italic;');
-        console.log('\nVisit our partner: https://www.zealsourcing.fi/');
     }
 
     /**
