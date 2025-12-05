@@ -17,7 +17,9 @@ class CardDeckAnimation {
     private deck: HTMLElement | null;
     private cards: HTMLElement[];
     private isAnimating = false;
+    private isVisible = false;
     private intervalId: number | null = null;
+    private initialTimeoutId: number | null = null;
     private readonly TIMING = {
         INITIAL_DELAY: 20000,    // Wait 20 seconds before first animation
         REPEAT_INTERVAL: 30000,  // Repeat every 30 seconds
@@ -37,23 +39,34 @@ class CardDeckAnimation {
     }
 
     private init(): void {
-        // Use Intersection Observer to trigger animation when section comes into view
+        // Use Intersection Observer to trigger animation only when section is visible
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting && !this.intervalId) {
-                        // Start first animation after initial delay
-                        setTimeout(() => {
-                            this.playAnimation();
-                            // Then repeat every 20 seconds
-                            this.intervalId = window.setInterval(() => {
-                                this.playAnimation();
-                            }, this.TIMING.REPEAT_INTERVAL);
-                        }, this.TIMING.INITIAL_DELAY);
+                    if (entry.isIntersecting) {
+                        // Section is visible - start interval if not already running
+                        if (!this.intervalId) {
+                            // Start first animation after initial delay
+                            this.initialTimeoutId = window.setTimeout(() => {
+                                if (this.isVisible) {
+                                    this.playAnimation();
+                                }
+                                // Then repeat every 30 seconds (only plays if visible)
+                                this.intervalId = window.setInterval(() => {
+                                    if (this.isVisible) {
+                                        this.playAnimation();
+                                    }
+                                }, this.TIMING.REPEAT_INTERVAL);
+                            }, this.TIMING.INITIAL_DELAY);
+                        }
+                        this.isVisible = true;
+                    } else {
+                        // Section is not visible - pause animations
+                        this.isVisible = false;
                     }
                 });
             },
-            { threshold: 0.2 } // Trigger when 20% visible
+            { threshold: 0.3 } // Trigger when 30% visible
         );
 
         observer.observe(this.deck!);
