@@ -143,7 +143,384 @@ a:hover {
     color: var(--color-text-secondary);
 }
 
-/* Vision & Mission Section */
+/* ============================================
+   CARD DECK SECTION (3D Shuffle Animation)
+   ============================================ */
+.card-deck-section {
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+    perspective: 1500px;
+    min-height: 100vh;
+    overflow: visible;
+}
+
+.card-deck {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    transform-style: preserve-3d;
+    min-height: 800px;
+}
+
+/* Individual Card */
+.deck-card {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    min-height: 350px;
+    transform-style: preserve-3d;
+    transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+}
+
+.card-front {
+    background: white;
+    border-left: 4px solid var(--color-accent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+}
+
+.card-back {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-dark) 100%);
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-back-design {
+    text-align: center;
+}
+
+.card-back-logo {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content Layout */
+.card-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    width: 100%;
+    align-items: center;
+}
+
+.card-content-grid.card-image-right .card-image {
+    order: 2;
+}
+
+.card-content-centered {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.card-text h2 {
+    font-size: var(--font-size-h2);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-content-centered h2 {
+    font-size: var(--font-size-h2);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-text p,
+.card-content-centered p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-text .highlight {
+    font-size: var(--font-size-large);
+    color: var(--color-primary);
+}
+
+.card-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.promise-tags {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-md) 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.promise-tags li {
+    background-color: var(--color-background-alt);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+}
+
+/* ============================================
+   CARD DECK ANIMATION STATES
+   ============================================ */
+
+/* State 1: Expanded (Initial - Cards stacked vertically) */
+.card-deck[data-state="expanded"] .deck-card {
+    position: relative;
+    transform: none;
+    opacity: 1;
+}
+
+.card-deck[data-state="expanded"] .card-inner {
+    position: relative;
+    min-height: 350px;
+}
+
+.card-deck[data-state="expanded"] .card-front {
+    position: relative;
+}
+
+/* State 2: Stacking (Cards collapse to center) */
+.card-deck[data-state="stacking"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="stacking"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    transform:
+        translate(-50%, -50%)
+        translateZ(calc(var(--card-index) * -15px))
+        rotateX(calc(var(--card-index) * 1.5deg));
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-deck[data-state="stacking"] .card-inner {
+    min-height: 300px;
+}
+
+/* State 3: Shuffling (3D Flip Animation) */
+.card-deck[data-state="shuffling"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="shuffling"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    animation: card-flip-shuffle 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--card-index) * 0.2s);
+}
+
+@keyframes card-flip-shuffle {
+    0% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -15px)) rotateY(0deg) scale(1); }
+    2% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -14px)) rotateY(0deg) scale(0.995); }
+    4% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -12px)) rotateY(0deg) scale(0.99); }
+    6% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -10px)) rotateY(0deg) scale(0.985); }
+    8% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -8px)) rotateY(0deg) scale(0.98); }
+    10% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -5px)) rotateY(0deg) scale(0.975); }
+    12% { transform: translate(-50%, -50%) translateZ(5px) rotateY(2deg) scale(0.97); }
+    14% { transform: translate(-50%, -50%) translateZ(15px) rotateY(5deg) scale(0.965); }
+    16% { transform: translate(-50%, -50%) translateZ(25px) rotateY(9deg) scale(0.96); }
+    18% { transform: translate(-50%, -50%) translateZ(35px) rotateY(14deg) scale(0.955); }
+    20% { transform: translate(-50%, -50%) translateZ(45px) rotateY(20deg) scale(0.95); }
+    22% { transform: translate(-50%, -50%) translateZ(52px) rotateY(27deg) scale(0.948); }
+    24% { transform: translate(-50%, -50%) translateZ(58px) rotateY(35deg) scale(0.946); }
+    26% { transform: translate(-50%, -50%) translateZ(63px) rotateY(44deg) scale(0.944); }
+    28% { transform: translate(-50%, -50%) translateZ(67px) rotateY(54deg) scale(0.942); }
+    30% { transform: translate(-50%, -50%) translateZ(70px) rotateY(65deg) scale(0.94); }
+    32% { transform: translate(-50%, -50%) translateZ(72px) rotateY(72deg) scale(0.94); }
+    34% { transform: translate(-50%, -50%) translateZ(74px) rotateY(79deg) scale(0.94); }
+    36% { transform: translate(-50%, -50%) translateZ(75px) rotateY(86deg) scale(0.94); }
+    38% { transform: translate(-50%, -50%) translateZ(75px) rotateY(93deg) scale(0.94); }
+    40% { transform: translate(-50%, -50%) translateZ(75px) rotateY(100deg) scale(0.94); }
+    42% { transform: translate(-50%, -50%) translateZ(75px) rotateY(107deg) scale(0.94); }
+    44% { transform: translate(-50%, -50%) translateZ(75px) rotateY(114deg) scale(0.94); }
+    46% { transform: translate(-50%, -50%) translateZ(75px) rotateY(121deg) scale(0.94); }
+    48% { transform: translate(-50%, -50%) translateZ(75px) rotateY(128deg) scale(0.94); }
+    50% { transform: translate(-50%, -50%) translateZ(75px) rotateY(135deg) scale(0.94); }
+    52% { transform: translate(-50%, -50%) translateZ(75px) rotateY(142deg) scale(0.94); }
+    54% { transform: translate(-50%, -50%) translateZ(75px) rotateY(149deg) scale(0.94); }
+    56% { transform: translate(-50%, -50%) translateZ(75px) rotateY(156deg) scale(0.94); }
+    58% { transform: translate(-50%, -50%) translateZ(75px) rotateY(163deg) scale(0.94); }
+    60% { transform: translate(-50%, -50%) translateZ(75px) rotateY(170deg) scale(0.94); }
+    62% { transform: translate(-50%, -50%) translateZ(74px) rotateY(177deg) scale(0.94); }
+    64% { transform: translate(-50%, -50%) translateZ(72px) rotateY(184deg) scale(0.942); }
+    66% { transform: translate(-50%, -50%) translateZ(70px) rotateY(191deg) scale(0.944); }
+    68% { transform: translate(-50%, -50%) translateZ(67px) rotateY(198deg) scale(0.946); }
+    70% { transform: translate(-50%, -50%) translateZ(63px) rotateY(205deg) scale(0.948); }
+    72% { transform: translate(-50%, -50%) translateZ(58px) rotateY(215deg) scale(0.95); }
+    74% { transform: translate(-50%, -50%) translateZ(52px) rotateY(228deg) scale(0.955); }
+    76% { transform: translate(-50%, -50%) translateZ(45px) rotateY(244deg) scale(0.96); }
+    78% { transform: translate(-50%, -50%) translateZ(38px) rotateY(262deg) scale(0.965); }
+    80% { transform: translate(-50%, -50%) translateZ(30px) rotateY(282deg) scale(0.97); }
+    82% { transform: translate(-50%, -50%) translateZ(24px) rotateY(298deg) scale(0.975); }
+    84% { transform: translate(-50%, -50%) translateZ(18px) rotateY(314deg) scale(0.98); }
+    86% { transform: translate(-50%, -50%) translateZ(13px) rotateY(328deg) scale(0.985); }
+    88% { transform: translate(-50%, -50%) translateZ(9px) rotateY(340deg) scale(0.99); }
+    90% { transform: translate(-50%, -50%) translateZ(6px) rotateY(348deg) scale(0.993); }
+    92% { transform: translate(-50%, -50%) translateZ(4px) rotateY(353deg) scale(0.995); }
+    94% { transform: translate(-50%, -50%) translateZ(2px) rotateY(356deg) scale(0.997); }
+    96% { transform: translate(-50%, -50%) translateZ(1px) rotateY(358deg) scale(0.998); }
+    98% { transform: translate(-50%, -50%) translateZ(0px) rotateY(359deg) scale(0.999); }
+    100% { transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -15px)) rotateY(360deg) scale(1); }
+}
+
+/* State 4: Shuffled (Waiting state) */
+.card-deck[data-state="shuffled"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="shuffled"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    transform:
+        translate(-50%, -50%)
+        translateZ(calc(var(--new-index, var(--card-index)) * -15px));
+}
+
+/* State 5: Expanding (Cards spread back to vertical) */
+.card-deck[data-state="expanding"] {
+    min-height: 800px;
+}
+
+.card-deck[data-state="expanding"] .deck-card {
+    animation: expand-to-vertical 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--new-index, var(--card-index)) * 0.15s);
+}
+
+@keyframes expand-to-vertical {
+    0% { position: absolute; top: 50%; left: 50%; width: 85%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -15px)) scale(0.95); opacity: 1; }
+    2% { position: absolute; top: 50%; left: 50%; width: 85.3%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.7px)) scale(0.951); opacity: 1; }
+    4% { position: absolute; top: 50%; left: 50%; width: 85.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.4px)) scale(0.952); opacity: 1; }
+    6% { position: absolute; top: 50%; left: 50%; width: 85.9%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.1px)) scale(0.953); opacity: 1; }
+    8% { position: absolute; top: 50%; left: 50%; width: 86.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.8px)) scale(0.954); opacity: 1; }
+    10% { position: absolute; top: 50%; left: 50%; width: 86.5%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.5px)) scale(0.955); opacity: 1; }
+    12% { position: absolute; top: 50%; left: 50%; width: 86.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.2px)) scale(0.956); opacity: 1; }
+    14% { position: absolute; top: 50%; left: 50%; width: 87.1%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.9px)) scale(0.957); opacity: 1; }
+    16% { position: absolute; top: 50%; left: 50%; width: 87.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.6px)) scale(0.958); opacity: 1; }
+    18% { position: absolute; top: 50%; left: 50%; width: 87.7%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.3px)) scale(0.959); opacity: 1; }
+    20% { position: absolute; top: 50%; left: 50%; width: 88%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12px)) scale(0.96); opacity: 1; }
+    22% { position: absolute; top: 50%; left: 50%; width: 88.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -11.6px)) scale(0.962); opacity: 1; }
+    24% { position: absolute; top: 50%; left: 50%; width: 88.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -11.2px)) scale(0.964); opacity: 1; }
+    26% { position: absolute; top: 50%; left: 50%; width: 89.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10.8px)) scale(0.966); opacity: 1; }
+    28% { position: absolute; top: 50%; left: 50%; width: 89.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10.4px)) scale(0.968); opacity: 1; }
+    30% { position: absolute; top: 50%; left: 50%; width: 90%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10px)) scale(0.97); opacity: 1; }
+    32% { position: absolute; top: 50%; left: 50%; width: 90.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -9.6px)) scale(0.972); opacity: 1; }
+    34% { position: absolute; top: 50%; left: 50%; width: 90.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -9.2px)) scale(0.974); opacity: 1; }
+    36% { position: absolute; top: 50%; left: 50%; width: 91.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8.8px)) scale(0.976); opacity: 1; }
+    38% { position: absolute; top: 50%; left: 50%; width: 91.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8.4px)) scale(0.978); opacity: 1; }
+    40% { position: absolute; top: 50%; left: 50%; width: 92%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8px)) scale(0.98); opacity: 1; }
+    42% { position: absolute; top: 50%; left: 50%; width: 92.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -7.5px)) scale(0.982); opacity: 1; }
+    44% { position: absolute; top: 50%; left: 50%; width: 92.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -7px)) scale(0.984); opacity: 1; }
+    46% { position: absolute; top: 50%; left: 50%; width: 93.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -6.5px)) scale(0.985); opacity: 1; }
+    48% { position: absolute; top: 50%; left: 50%; width: 93.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -6px)) scale(0.986); opacity: 1; }
+    50% { position: absolute; top: 50%; left: 50%; width: 94%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -5px)) scale(0.987); opacity: 1; }
+    52% { position: absolute; top: 50%; left: 50%; width: 94.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -4px)) scale(0.988); opacity: 1; }
+    54% { position: absolute; top: 50%; left: 50%; width: 94.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -3px)) scale(0.989); opacity: 1; }
+    56% { position: absolute; top: 50%; left: 50%; width: 95.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -2px)) scale(0.99); opacity: 1; }
+    58% { position: absolute; top: 50%; left: 50%; width: 95.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -1px)) scale(0.991); opacity: 1; }
+    60% { width: 96%; transform: translateZ(0px) scale(0.992); opacity: 1; }
+    62% { width: 96.4%; transform: scale(0.993); opacity: 1; }
+    64% { width: 96.8%; transform: scale(0.994); opacity: 1; }
+    66% { width: 97.2%; transform: scale(0.995); opacity: 1; }
+    68% { width: 97.6%; transform: scale(0.995); opacity: 1; }
+    70% { width: 98%; transform: scale(0.996); opacity: 1; }
+    72% { width: 98.2%; transform: scale(0.996); opacity: 1; }
+    74% { width: 98.4%; transform: scale(0.997); opacity: 1; }
+    76% { width: 98.6%; transform: scale(0.997); opacity: 1; }
+    78% { width: 98.8%; transform: scale(0.998); opacity: 1; }
+    80% { width: 99%; transform: scale(0.998); opacity: 1; }
+    82% { width: 99.2%; transform: scale(0.998); opacity: 1; }
+    84% { width: 99.4%; transform: scale(0.999); opacity: 1; }
+    86% { width: 99.5%; transform: scale(0.999); opacity: 1; }
+    88% { width: 99.6%; transform: scale(0.999); opacity: 1; }
+    90% { width: 99.7%; transform: scale(0.9995); opacity: 1; }
+    92% { width: 99.8%; transform: scale(0.9996); opacity: 1; }
+    94% { width: 99.85%; transform: scale(0.9997); opacity: 1; }
+    96% { width: 99.9%; transform: scale(0.9998); opacity: 1; }
+    98% { width: 99.95%; transform: scale(0.9999); opacity: 1; }
+    100% { position: relative; top: auto; left: auto; width: 100%; transform: none; opacity: 1; }
+}
+
+/* State 6: Final (Settled state) */
+.card-deck[data-state="final"] .deck-card {
+    position: relative;
+    transform: none;
+    opacity: 1;
+    width: 100%;
+}
+
+.card-deck[data-state="final"] .card-inner {
+    position: relative;
+    min-height: 350px;
+}
+
+.card-deck[data-state="final"] .card-front {
+    position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-content-grid.card-image-right .card-image {
+        order: -1;
+    }
+
+    .card-text h2,
+    .card-content-centered h2 {
+        font-size: var(--font-size-h3);
+    }
+
+    .card-inner {
+        min-height: 450px;
+    }
+
+    .card-deck[data-state="stacking"] .deck-card,
+    .card-deck[data-state="shuffling"] .deck-card,
+    .card-deck[data-state="shuffled"] .deck-card {
+        width: 95%;
+    }
+}
+
+/* Vision & Mission Section (Legacy - kept for compatibility) */
 .vision-mission {
     padding: var(--spacing-lg) 0;
     background-color: var(--color-background);
