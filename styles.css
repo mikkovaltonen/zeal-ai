@@ -143,7 +143,432 @@ a:hover {
     color: var(--color-text-secondary);
 }
 
-/* Vision & Mission Section */
+/* ============================================
+   CARD DECK SECTION (3D Shuffle Animation)
+   ============================================ */
+.card-deck-section {
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+    perspective: 1500px;
+    min-height: 100vh;
+    overflow: visible;
+}
+
+.card-deck {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    transform-style: preserve-3d;
+    min-height: 800px;
+}
+
+/* Individual Card */
+.deck-card {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    min-height: 350px;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+}
+
+.card-front {
+    background: white;
+    border-left: 4px solid var(--color-accent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+}
+
+.card-back {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-dark) 100%);
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-back-design {
+    text-align: center;
+}
+
+.card-back-logo {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content Layout */
+.card-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    width: 100%;
+    align-items: center;
+}
+
+.card-content-grid.card-image-right .card-image {
+    order: 2;
+}
+
+.card-content-centered {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.card-text h2 {
+    font-size: var(--font-size-h2);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-content-centered h2 {
+    font-size: var(--font-size-h2);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-text p,
+.card-content-centered p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-text .highlight {
+    font-size: var(--font-size-large);
+    color: var(--color-primary);
+}
+
+.card-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.promise-tags {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-md) 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.promise-tags li {
+    background-color: var(--color-background-alt);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+}
+
+/* ============================================
+   CARD DECK ANIMATION STATES
+   ============================================ */
+
+/* State 1: Expanded (Initial - Cards stacked vertically) */
+.card-deck[data-state="expanded"] .deck-card {
+    position: relative;
+    transform: none;
+    opacity: 1;
+}
+
+.card-deck[data-state="expanded"] .card-inner {
+    position: relative;
+    min-height: 350px;
+}
+
+.card-deck[data-state="expanded"] .card-front {
+    position: relative;
+}
+
+/* State 2: Stacking (Cards collapse to center) */
+.card-deck[data-state="stacking"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="stacking"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    transform:
+        translate(-50%, -50%)
+        translateZ(calc(var(--card-index) * -15px))
+        rotateX(calc(var(--card-index) * 1.5deg));
+    transition: all 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.card-deck[data-state="stacking"] .card-inner {
+    min-height: 300px;
+}
+
+/* State 3: Shuffling (3D Flip Animation) */
+.card-deck[data-state="shuffling"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="shuffling"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    animation: card-flip-shuffle 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: calc(var(--card-index) * 0.15s);
+}
+
+@keyframes card-flip-shuffle {
+    0% { transform: translate(-50%, -50%) translateZ(calc(var(--card-index) * -15px)) rotateY(0deg) rotateX(0deg) scale(1); }
+    1% { transform: translate(-50%, -50%) translateZ(5px) rotateY(3.6deg) rotateX(0.4deg) scale(0.998); }
+    2% { transform: translate(-50%, -50%) translateZ(10px) rotateY(7.2deg) rotateX(0.8deg) scale(0.996); }
+    3% { transform: translate(-50%, -50%) translateZ(15px) rotateY(10.8deg) rotateX(1.2deg) scale(0.994); }
+    4% { transform: translate(-50%, -50%) translateZ(20px) rotateY(14.4deg) rotateX(1.6deg) scale(0.992); }
+    5% { transform: translate(-50%, -50%) translateZ(25px) rotateY(18deg) rotateX(2deg) scale(0.99); }
+    6% { transform: translate(-50%, -50%) translateZ(30px) rotateY(21.6deg) rotateX(2.5deg) scale(0.988); }
+    7% { transform: translate(-50%, -50%) translateZ(35px) rotateY(25.2deg) rotateX(3deg) scale(0.986); }
+    8% { transform: translate(-50%, -50%) translateZ(40px) rotateY(28.8deg) rotateX(3.5deg) scale(0.984); }
+    9% { transform: translate(-50%, -50%) translateZ(45px) rotateY(32.4deg) rotateX(4deg) scale(0.982); }
+    10% { transform: translate(-50%, -50%) translateZ(50px) rotateY(36deg) rotateX(4.5deg) scale(0.98); }
+    11% { transform: translate(-50%, -50%) translateZ(55px) rotateY(39.6deg) rotateX(5deg) scale(0.978); }
+    12% { transform: translate(-50%, -50%) translateZ(60px) rotateY(43.2deg) rotateX(5.5deg) scale(0.976); }
+    13% { transform: translate(-50%, -50%) translateZ(65px) rotateY(46.8deg) rotateX(6deg) scale(0.974); }
+    14% { transform: translate(-50%, -50%) translateZ(70px) rotateY(50.4deg) rotateX(6.5deg) scale(0.972); }
+    15% { transform: translate(-50%, -50%) translateZ(75px) rotateY(54deg) rotateX(7deg) scale(0.97); }
+    16% { transform: translate(-50%, -50%) translateZ(79px) rotateY(57.6deg) rotateX(7.3deg) scale(0.968); }
+    17% { transform: translate(-50%, -50%) translateZ(83px) rotateY(61.2deg) rotateX(7.6deg) scale(0.966); }
+    18% { transform: translate(-50%, -50%) translateZ(87px) rotateY(64.8deg) rotateX(7.8deg) scale(0.964); }
+    19% { transform: translate(-50%, -50%) translateZ(91px) rotateY(68.4deg) rotateX(7.9deg) scale(0.962); }
+    20% { transform: translate(-50%, -50%) translateZ(95px) rotateY(72deg) rotateX(8deg) scale(0.96); }
+    21% { transform: translate(-50%, -50%) translateZ(98px) rotateY(75.6deg) rotateX(7.8deg) scale(0.958); }
+    22% { transform: translate(-50%, -50%) translateZ(101px) rotateY(79.2deg) rotateX(7.5deg) scale(0.956); }
+    23% { transform: translate(-50%, -50%) translateZ(104px) rotateY(82.8deg) rotateX(7.2deg) scale(0.954); }
+    24% { transform: translate(-50%, -50%) translateZ(107px) rotateY(86.4deg) rotateX(6.8deg) scale(0.952); }
+    25% { transform: translate(-50%, -50%) translateZ(110px) rotateY(90deg) rotateX(6.4deg) scale(0.95); }
+    26% { transform: translate(-50%, -50%) translateZ(112px) rotateY(93.6deg) rotateX(5.9deg) scale(0.948); }
+    27% { transform: translate(-50%, -50%) translateZ(114px) rotateY(97.2deg) rotateX(5.4deg) scale(0.946); }
+    28% { transform: translate(-50%, -50%) translateZ(116px) rotateY(100.8deg) rotateX(4.8deg) scale(0.944); }
+    29% { transform: translate(-50%, -50%) translateZ(117px) rotateY(104.4deg) rotateX(4.2deg) scale(0.942); }
+    30% { transform: translate(-50%, -50%) translateZ(118px) rotateY(108deg) rotateX(3.6deg) scale(0.94); }
+    31% { transform: translate(-50%, -50%) translateZ(119px) rotateY(111.6deg) rotateX(2.9deg) scale(0.938); }
+    32% { transform: translate(-50%, -50%) translateZ(119.5px) rotateY(115.2deg) rotateX(2.2deg) scale(0.936); }
+    33% { transform: translate(-50%, -50%) translateZ(120px) rotateY(118.8deg) rotateX(1.4deg) scale(0.934); }
+    34% { transform: translate(-50%, -50%) translateZ(120px) rotateY(122.4deg) rotateX(0.6deg) scale(0.932); }
+    35% { transform: translate(-50%, -50%) translateZ(120px) rotateY(126deg) rotateX(-0.2deg) scale(0.93); }
+    36% { transform: translate(-50%, -50%) translateZ(120px) rotateY(129.6deg) rotateX(-1deg) scale(0.928); }
+    37% { transform: translate(-50%, -50%) translateZ(120px) rotateY(133.2deg) rotateX(-1.8deg) scale(0.926); }
+    38% { transform: translate(-50%, -50%) translateZ(120px) rotateY(136.8deg) rotateX(-2.5deg) scale(0.924); }
+    39% { transform: translate(-50%, -50%) translateZ(120px) rotateY(140.4deg) rotateX(-3.2deg) scale(0.922); }
+    40% { transform: translate(-50%, -50%) translateZ(120px) rotateY(144deg) rotateX(-3.8deg) scale(0.92); }
+    41% { transform: translate(-50%, -50%) translateZ(120px) rotateY(147.6deg) rotateX(-3.6deg) scale(0.918); }
+    42% { transform: translate(-50%, -50%) translateZ(120px) rotateY(151.2deg) rotateX(-3.3deg) scale(0.917); }
+    43% { transform: translate(-50%, -50%) translateZ(120px) rotateY(154.8deg) rotateX(-3deg) scale(0.916); }
+    44% { transform: translate(-50%, -50%) translateZ(120px) rotateY(158.4deg) rotateX(-2.6deg) scale(0.915); }
+    45% { transform: translate(-50%, -50%) translateZ(120px) rotateY(162deg) rotateX(-2.2deg) scale(0.914); }
+    46% { transform: translate(-50%, -50%) translateZ(120px) rotateY(165.6deg) rotateX(-1.8deg) scale(0.913); }
+    47% { transform: translate(-50%, -50%) translateZ(120px) rotateY(169.2deg) rotateX(-1.3deg) scale(0.912); }
+    48% { transform: translate(-50%, -50%) translateZ(120px) rotateY(172.8deg) rotateX(-0.8deg) scale(0.911); }
+    49% { transform: translate(-50%, -50%) translateZ(120px) rotateY(176.4deg) rotateX(-0.4deg) scale(0.91); }
+    50% { transform: translate(-50%, -50%) translateZ(120px) rotateY(180deg) rotateX(0deg) scale(0.91); }
+    51% { transform: translate(-50%, -50%) translateZ(120px) rotateY(183.6deg) rotateX(0.4deg) scale(0.91); }
+    52% { transform: translate(-50%, -50%) translateZ(120px) rotateY(187.2deg) rotateX(0.8deg) scale(0.911); }
+    53% { transform: translate(-50%, -50%) translateZ(120px) rotateY(190.8deg) rotateX(1.3deg) scale(0.912); }
+    54% { transform: translate(-50%, -50%) translateZ(120px) rotateY(194.4deg) rotateX(1.8deg) scale(0.913); }
+    55% { transform: translate(-50%, -50%) translateZ(120px) rotateY(198deg) rotateX(2.2deg) scale(0.914); }
+    56% { transform: translate(-50%, -50%) translateZ(120px) rotateY(201.6deg) rotateX(2.6deg) scale(0.915); }
+    57% { transform: translate(-50%, -50%) translateZ(120px) rotateY(205.2deg) rotateX(3deg) scale(0.916); }
+    58% { transform: translate(-50%, -50%) translateZ(120px) rotateY(208.8deg) rotateX(3.3deg) scale(0.917); }
+    59% { transform: translate(-50%, -50%) translateZ(120px) rotateY(212.4deg) rotateX(3.6deg) scale(0.918); }
+    60% { transform: translate(-50%, -50%) translateZ(120px) rotateY(216deg) rotateX(3.8deg) scale(0.92); }
+    61% { transform: translate(-50%, -50%) translateZ(120px) rotateY(219.6deg) rotateX(3.5deg) scale(0.922); }
+    62% { transform: translate(-50%, -50%) translateZ(119.5px) rotateY(223.2deg) rotateX(3.1deg) scale(0.924); }
+    63% { transform: translate(-50%, -50%) translateZ(119px) rotateY(226.8deg) rotateX(2.7deg) scale(0.926); }
+    64% { transform: translate(-50%, -50%) translateZ(118px) rotateY(230.4deg) rotateX(2.2deg) scale(0.928); }
+    65% { transform: translate(-50%, -50%) translateZ(117px) rotateY(234deg) rotateX(1.7deg) scale(0.93); }
+    66% { transform: translate(-50%, -50%) translateZ(116px) rotateY(237.6deg) rotateX(1.2deg) scale(0.932); }
+    67% { transform: translate(-50%, -50%) translateZ(114px) rotateY(241.2deg) rotateX(0.6deg) scale(0.934); }
+    68% { transform: translate(-50%, -50%) translateZ(112px) rotateY(244.8deg) rotateX(0deg) scale(0.936); }
+    69% { transform: translate(-50%, -50%) translateZ(110px) rotateY(248.4deg) rotateX(-0.6deg) scale(0.938); }
+    70% { transform: translate(-50%, -50%) translateZ(108px) rotateY(252deg) rotateX(-1.2deg) scale(0.94); }
+    71% { transform: translate(-50%, -50%) translateZ(105px) rotateY(255.6deg) rotateX(-1.8deg) scale(0.942); }
+    72% { transform: translate(-50%, -50%) translateZ(102px) rotateY(259.2deg) rotateX(-2.4deg) scale(0.944); }
+    73% { transform: translate(-50%, -50%) translateZ(99px) rotateY(262.8deg) rotateX(-3deg) scale(0.946); }
+    74% { transform: translate(-50%, -50%) translateZ(96px) rotateY(266.4deg) rotateX(-3.5deg) scale(0.948); }
+    75% { transform: translate(-50%, -50%) translateZ(93px) rotateY(270deg) rotateX(-4deg) scale(0.95); }
+    76% { transform: translate(-50%, -50%) translateZ(89px) rotateY(273.6deg) rotateX(-4.4deg) scale(0.952); }
+    77% { transform: translate(-50%, -50%) translateZ(85px) rotateY(277.2deg) rotateX(-4.8deg) scale(0.954); }
+    78% { transform: translate(-50%, -50%) translateZ(81px) rotateY(280.8deg) rotateX(-5.2deg) scale(0.956); }
+    79% { transform: translate(-50%, -50%) translateZ(77px) rotateY(284.4deg) rotateX(-5.5deg) scale(0.958); }
+    80% { transform: translate(-50%, -50%) translateZ(73px) rotateY(288deg) rotateX(-5.8deg) scale(0.96); }
+    81% { transform: translate(-50%, -50%) translateZ(69px) rotateY(291.6deg) rotateX(-5.5deg) scale(0.962); }
+    82% { transform: translate(-50%, -50%) translateZ(65px) rotateY(295.2deg) rotateX(-5.2deg) scale(0.964); }
+    83% { transform: translate(-50%, -50%) translateZ(61px) rotateY(298.8deg) rotateX(-4.8deg) scale(0.966); }
+    84% { transform: translate(-50%, -50%) translateZ(57px) rotateY(302.4deg) rotateX(-4.4deg) scale(0.968); }
+    85% { transform: translate(-50%, -50%) translateZ(53px) rotateY(306deg) rotateX(-4deg) scale(0.97); }
+    86% { transform: translate(-50%, -50%) translateZ(49px) rotateY(309.6deg) rotateX(-3.5deg) scale(0.972); }
+    87% { transform: translate(-50%, -50%) translateZ(45px) rotateY(313.2deg) rotateX(-3deg) scale(0.974); }
+    88% { transform: translate(-50%, -50%) translateZ(41px) rotateY(316.8deg) rotateX(-2.5deg) scale(0.976); }
+    89% { transform: translate(-50%, -50%) translateZ(37px) rotateY(320.4deg) rotateX(-2deg) scale(0.978); }
+    90% { transform: translate(-50%, -50%) translateZ(33px) rotateY(324deg) rotateX(-1.6deg) scale(0.98); }
+    91% { transform: translate(-50%, -50%) translateZ(29px) rotateY(327.6deg) rotateX(-1.3deg) scale(0.982); }
+    92% { transform: translate(-50%, -50%) translateZ(25px) rotateY(331.2deg) rotateX(-1deg) scale(0.984); }
+    93% { transform: translate(-50%, -50%) translateZ(21px) rotateY(334.8deg) rotateX(-0.8deg) scale(0.986); }
+    94% { transform: translate(-50%, -50%) translateZ(17px) rotateY(338.4deg) rotateX(-0.6deg) scale(0.988); }
+    95% { transform: translate(-50%, -50%) translateZ(13px) rotateY(342deg) rotateX(-0.4deg) scale(0.99); }
+    96% { transform: translate(-50%, -50%) translateZ(10px) rotateY(345.6deg) rotateX(-0.3deg) scale(0.992); }
+    97% { transform: translate(-50%, -50%) translateZ(7px) rotateY(349.2deg) rotateX(-0.2deg) scale(0.994); }
+    98% { transform: translate(-50%, -50%) translateZ(4px) rotateY(352.8deg) rotateX(-0.1deg) scale(0.996); }
+    99% { transform: translate(-50%, -50%) translateZ(2px) rotateY(356.4deg) rotateX(-0.05deg) scale(0.998); }
+    100% { transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -15px)) rotateY(360deg) rotateX(0deg) scale(1); }
+}
+
+/* State 4: Shuffled (Waiting state) */
+.card-deck[data-state="shuffled"] {
+    min-height: 450px;
+}
+
+.card-deck[data-state="shuffled"] .deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    transform:
+        translate(-50%, -50%)
+        translateZ(calc(var(--new-index, var(--card-index)) * -15px));
+}
+
+/* State 5: Expanding (Cards spread back to vertical) */
+.card-deck[data-state="expanding"] {
+    min-height: 800px;
+}
+
+.card-deck[data-state="expanding"] .deck-card {
+    animation: expand-to-vertical 1.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: calc(var(--new-index, var(--card-index)) * 0.12s);
+}
+
+@keyframes expand-to-vertical {
+    0% { position: absolute; top: 50%; left: 50%; width: 85%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -15px)) scale(0.95); opacity: 1; }
+    2% { position: absolute; top: 50%; left: 50%; width: 85.3%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.7px)) scale(0.951); opacity: 1; }
+    4% { position: absolute; top: 50%; left: 50%; width: 85.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.4px)) scale(0.952); opacity: 1; }
+    6% { position: absolute; top: 50%; left: 50%; width: 85.9%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -14.1px)) scale(0.953); opacity: 1; }
+    8% { position: absolute; top: 50%; left: 50%; width: 86.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.8px)) scale(0.954); opacity: 1; }
+    10% { position: absolute; top: 50%; left: 50%; width: 86.5%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.5px)) scale(0.955); opacity: 1; }
+    12% { position: absolute; top: 50%; left: 50%; width: 86.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -13.2px)) scale(0.956); opacity: 1; }
+    14% { position: absolute; top: 50%; left: 50%; width: 87.1%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.9px)) scale(0.957); opacity: 1; }
+    16% { position: absolute; top: 50%; left: 50%; width: 87.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.6px)) scale(0.958); opacity: 1; }
+    18% { position: absolute; top: 50%; left: 50%; width: 87.7%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12.3px)) scale(0.959); opacity: 1; }
+    20% { position: absolute; top: 50%; left: 50%; width: 88%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -12px)) scale(0.96); opacity: 1; }
+    22% { position: absolute; top: 50%; left: 50%; width: 88.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -11.6px)) scale(0.962); opacity: 1; }
+    24% { position: absolute; top: 50%; left: 50%; width: 88.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -11.2px)) scale(0.964); opacity: 1; }
+    26% { position: absolute; top: 50%; left: 50%; width: 89.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10.8px)) scale(0.966); opacity: 1; }
+    28% { position: absolute; top: 50%; left: 50%; width: 89.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10.4px)) scale(0.968); opacity: 1; }
+    30% { position: absolute; top: 50%; left: 50%; width: 90%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -10px)) scale(0.97); opacity: 1; }
+    32% { position: absolute; top: 50%; left: 50%; width: 90.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -9.6px)) scale(0.972); opacity: 1; }
+    34% { position: absolute; top: 50%; left: 50%; width: 90.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -9.2px)) scale(0.974); opacity: 1; }
+    36% { position: absolute; top: 50%; left: 50%; width: 91.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8.8px)) scale(0.976); opacity: 1; }
+    38% { position: absolute; top: 50%; left: 50%; width: 91.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8.4px)) scale(0.978); opacity: 1; }
+    40% { position: absolute; top: 50%; left: 50%; width: 92%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -8px)) scale(0.98); opacity: 1; }
+    42% { position: absolute; top: 50%; left: 50%; width: 92.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -7.5px)) scale(0.982); opacity: 1; }
+    44% { position: absolute; top: 50%; left: 50%; width: 92.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -7px)) scale(0.984); opacity: 1; }
+    46% { position: absolute; top: 50%; left: 50%; width: 93.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -6.5px)) scale(0.985); opacity: 1; }
+    48% { position: absolute; top: 50%; left: 50%; width: 93.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -6px)) scale(0.986); opacity: 1; }
+    50% { position: absolute; top: 50%; left: 50%; width: 94%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -5px)) scale(0.987); opacity: 1; }
+    52% { position: absolute; top: 50%; left: 50%; width: 94.4%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -4px)) scale(0.988); opacity: 1; }
+    54% { position: absolute; top: 50%; left: 50%; width: 94.8%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -3px)) scale(0.989); opacity: 1; }
+    56% { position: absolute; top: 50%; left: 50%; width: 95.2%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -2px)) scale(0.99); opacity: 1; }
+    58% { position: absolute; top: 50%; left: 50%; width: 95.6%; transform: translate(-50%, -50%) translateZ(calc(var(--new-index, var(--card-index)) * -1px)) scale(0.991); opacity: 1; }
+    60% { width: 96%; transform: translateZ(0px) scale(0.992); opacity: 1; }
+    62% { width: 96.4%; transform: scale(0.993); opacity: 1; }
+    64% { width: 96.8%; transform: scale(0.994); opacity: 1; }
+    66% { width: 97.2%; transform: scale(0.995); opacity: 1; }
+    68% { width: 97.6%; transform: scale(0.995); opacity: 1; }
+    70% { width: 98%; transform: scale(0.996); opacity: 1; }
+    72% { width: 98.2%; transform: scale(0.996); opacity: 1; }
+    74% { width: 98.4%; transform: scale(0.997); opacity: 1; }
+    76% { width: 98.6%; transform: scale(0.997); opacity: 1; }
+    78% { width: 98.8%; transform: scale(0.998); opacity: 1; }
+    80% { width: 99%; transform: scale(0.998); opacity: 1; }
+    82% { width: 99.2%; transform: scale(0.998); opacity: 1; }
+    84% { width: 99.4%; transform: scale(0.999); opacity: 1; }
+    86% { width: 99.5%; transform: scale(0.999); opacity: 1; }
+    88% { width: 99.6%; transform: scale(0.999); opacity: 1; }
+    90% { width: 99.7%; transform: scale(0.9995); opacity: 1; }
+    92% { width: 99.8%; transform: scale(0.9996); opacity: 1; }
+    94% { width: 99.85%; transform: scale(0.9997); opacity: 1; }
+    96% { width: 99.9%; transform: scale(0.9998); opacity: 1; }
+    98% { width: 99.95%; transform: scale(0.9999); opacity: 1; }
+    100% { position: relative; top: auto; left: auto; width: 100%; transform: none; opacity: 1; }
+}
+
+/* State 6: Final (Settled state) */
+.card-deck[data-state="final"] .deck-card {
+    position: relative;
+    transform: none;
+    opacity: 1;
+    width: 100%;
+}
+
+.card-deck[data-state="final"] .card-inner {
+    position: relative;
+    min-height: 350px;
+}
+
+.card-deck[data-state="final"] .card-front {
+    position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-content-grid.card-image-right .card-image {
+        order: -1;
+    }
+
+    .card-text h2,
+    .card-content-centered h2 {
+        font-size: var(--font-size-h3);
+    }
+
+    .card-inner {
+        min-height: 450px;
+    }
+
+    .card-deck[data-state="stacking"] .deck-card,
+    .card-deck[data-state="shuffling"] .deck-card,
+    .card-deck[data-state="shuffled"] .deck-card {
+        width: 95%;
+    }
+}
+
+/* Vision & Mission Section (Legacy - kept for compatibility) */
 .vision-mission {
     padding: var(--spacing-lg) 0;
     background-color: var(--color-background);
