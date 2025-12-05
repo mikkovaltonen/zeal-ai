@@ -23,10 +23,10 @@ class CardDeckAnimation {
     private readonly TIMING = {
         INITIAL_DELAY: 20000,    // Wait 20 seconds before first animation
         REPEAT_INTERVAL: 30000,  // Repeat every 30 seconds
-        STACK_DURATION: 1500,    // Time to stack cards
-        SHUFFLE_DURATION: 2500,  // Time for 3D flip animation
-        SHUFFLED_PAUSE: 400,     // Pause after shuffle
-        EXPAND_DURATION: 1500,   // Time to expand back
+        STACK_DURATION: 2000,    // Time to stack cards (slower)
+        SHUFFLE_DURATION: 4000,  // Time for 3D flip animation (much slower)
+        SHUFFLED_PAUSE: 500,     // Pause after shuffle
+        EXPAND_DURATION: 2500,   // Time to expand back (slower)
     };
 
     constructor() {
