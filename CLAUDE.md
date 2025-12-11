@@ -1,0 +1,2 @@
+- Köytä aina google/gemini-3-pro-preview
+- Köytä aina google/gemini-3-pro-preview
