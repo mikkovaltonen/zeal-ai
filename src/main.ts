@@ -9,159 +9,8 @@ interface Product {
     reviews?: number;
 }
 
-/**
- * Card Deck Animation - 3D Flip Shuffle Effect
- * Animates cards: expanded -> stacked -> shuffled -> expanded (new order)
- */
-class CardDeckAnimation {
-    private deck: HTMLElement | null;
-    private cards: HTMLElement[];
-    private isAnimating = false;
-    private isVisible = false;
-    private intervalId: number | null = null;
-    private initialTimeoutId: number | null = null;
-    private readonly TIMING = {
-        INITIAL_DELAY: 20000,    // Wait 20 seconds before first animation
-        REPEAT_INTERVAL: 30000,  // Repeat every 30 seconds
-        STACK_DURATION: 2000,    // Time to stack cards (slower)
-        SHUFFLE_DURATION: 4000,  // Time for 3D flip animation (much slower)
-        SHUFFLED_PAUSE: 500,     // Pause after shuffle
-        EXPAND_DURATION: 2500,   // Time to expand back (slower)
-    };
-
-    constructor() {
-        this.deck = document.querySelector('.card-deck');
-        this.cards = Array.from(document.querySelectorAll('.deck-card'));
-
-        if (this.deck && this.cards.length > 0) {
-            this.init();
-        }
-    }
-
-    private init(): void {
-        // Use Intersection Observer to trigger animation only when section is visible
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        // Section is visible - start interval if not already running
-                        if (!this.intervalId) {
-                            // Start first animation after initial delay
-                            this.initialTimeoutId = window.setTimeout(() => {
-                                if (this.isVisible) {
-                                    this.playAnimation();
-                                }
-                                // Then repeat every 30 seconds (only plays if visible)
-                                this.intervalId = window.setInterval(() => {
-                                    if (this.isVisible) {
-                                        this.playAnimation();
-                                    }
-                                }, this.TIMING.REPEAT_INTERVAL);
-                            }, this.TIMING.INITIAL_DELAY);
-                        }
-                        this.isVisible = true;
-                    } else {
-                        // Section is not visible - pause animations
-                        this.isVisible = false;
-                    }
-                });
-            },
-            { threshold: 0.3 } // Trigger when 30% visible
-        );
-
-        observer.observe(this.deck!);
-    }
-
-    /**
-     * Main animation sequence
-     */
-    private async playAnimation(): Promise<void> {
-        if (!this.deck || this.isAnimating) return;
-
-        this.isAnimating = true;
-
-        // 2. Stack cards into a deck
-        this.deck.dataset.state = 'stacking';
-        await this.wait(this.TIMING.STACK_DURATION);
-
-        // 3. Generate new random order
-        const newOrder = this.shuffleArray([...this.cards]);
-
-        // Set new indices for CSS animations
-        newOrder.forEach((card, index) => {
-            card.style.setProperty('--new-index', index.toString());
-        });
-
-        // 4. Play 3D flip shuffle animation
-        this.deck.dataset.state = 'shuffling';
-        await this.wait(this.TIMING.SHUFFLE_DURATION);
-
-        // 5. Brief pause in shuffled state
-        this.deck.dataset.state = 'shuffled';
-
-        // Reorder DOM elements
-        newOrder.forEach((card) => this.deck!.appendChild(card));
-
-        await this.wait(this.TIMING.SHUFFLED_PAUSE);
-
-        // 6. Expand cards back to vertical layout
-        this.deck.dataset.state = 'expanding';
-        await this.wait(this.TIMING.EXPAND_DURATION);
-
-        // 7. Set final state
-        this.deck.dataset.state = 'final';
-
-        // Update card indices for potential future animations
-        this.cards = Array.from(document.querySelectorAll('.deck-card'));
-        this.cards.forEach((card, index) => {
-            card.style.setProperty('--card-index', index.toString());
-        });
-
-        this.isAnimating = false;
-    }
-
-    /**
-     * Fisher-Yates shuffle algorithm
-     */
-    private shuffleArray<T>(array: T[]): T[] {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
-
-    /**
-     * Promise-based wait utility
-     */
-    private wait(ms: number): Promise<void> {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    /**
-     * Replay the animation (for testing/demo)
-     */
-    public replay(): void {
-        if (!this.deck) return;
-
-        // Reset to initial state
-        this.deck.dataset.state = 'expanded';
-        this.cards.forEach((card, index) => {
-            card.style.setProperty('--card-index', index.toString());
-            card.style.removeProperty('--new-index');
-        });
-
-        // Replay after brief delay
-        setTimeout(() => {
-            this.playAnimation();
-        }, 500);
-    }
-}
-
 class PortfolioApp {
     private products: Product[] = [];
-    private cardDeck: CardDeckAnimation | null = null;
 
     constructor() {
         this.init();
@@ -175,14 +24,6 @@ class PortfolioApp {
         this.setupScrollAnimations();
         this.setupProductCards();
         this.setupFAQAccordion();
-        this.setupCardDeckAnimation();
-    }
-
-    /**
-     * Set up the card deck shuffle animation
-     */
-    private setupCardDeckAnimation(): void {
-        this.cardDeck = new CardDeckAnimation();
     }
 
     /**
@@ -341,4 +182,4 @@ if (document.readyState === 'loading') {
     (window as any).zealApp = app;
 }
 
-export { PortfolioApp, Product, CardDeckAnimation };
+export { PortfolioApp, Product };
